@@ -8,7 +8,7 @@ app.use(express.json())
 
 app.get('/', (req, res) => {
     res.send('<center><h1>Welcome to E-Commerce Backend</h1>' +
-        '<h3><a href="https://github.com/prasoonsoni/Social-Media-Backend" target="_blank">Visit Repository</a></h3></center>')
+        '<h3><a href="https://github.com/prasoonsoni/e-Commerce-Backend" target="_blank">Visit Repository</a></h3></center>')
 })
 
 app.listen(port, () => {
