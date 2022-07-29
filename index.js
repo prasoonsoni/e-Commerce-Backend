@@ -12,6 +12,8 @@ app.get('/', (req, res) => {
         '<h3><a href="https://github.com/prasoonsoni/e-Commerce-Backend" target="_blank">Visit Repository</a></h3></center>')
 })
 
+app. use('/api/user', require('./routes/user/userRoutes'))
+
 app.listen(port, () => {
     console.log(`E-Commerce Backend listening on http://localhost:${port}`)
 })
