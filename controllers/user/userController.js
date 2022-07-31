@@ -1,6 +1,8 @@
+require('dotenv').config()
 const User = require('../../models/user/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.JWT_SECRET
 
 const addUser = async (req, res) => {
     try {
@@ -39,7 +41,8 @@ const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.json({ success: false, message: 'Incorrect password' })
         }
-        const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' })
+        const data = { user: { id: user._id } }
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' })
         return res.json({ success: true, message: 'User logged in successfully', token })
     } catch (error) {
         console.log(error.message)
