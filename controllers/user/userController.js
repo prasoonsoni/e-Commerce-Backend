@@ -79,4 +79,32 @@ const editUser = async (req, res) => {
     }
 }
 
-module.exports = { addUser, loginUser, editUser }
+const changePassword = async (req, res) => {
+    try {
+        const id = req.user.id
+        const { old_password, new_password } = req.body
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        const isMatch = await bcrypt.compare(old_password, user.password)
+        if (!isMatch) {
+            return res.json({ success: false, message: 'Incorrect password' })
+        }
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(new_password, salt)
+        const updatedUser = await User.updateOne({ _id: id }, {
+            password: hashPassword,
+            modified_at: Date.now()
+        })
+        if (!updatedUser) {
+            return res.json({ success: false, message: 'Error updating user' })
+        }
+        return res.json({ success: true, message: 'Password updated Successfully' })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+module.exports = { addUser, loginUser, editUser, changePassword }

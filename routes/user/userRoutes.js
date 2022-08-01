@@ -6,5 +6,6 @@ const fetchUser = require('../../middlewares/fetchUser')
 router.post('/', userController.addUser)
 router.get('/', userController.loginUser)
 router.put('/', fetchUser, userController.editUser)
+router.put('/changepassword', fetchUser, userController.changePassword)
 
 module.exports = router
