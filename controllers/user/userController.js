@@ -42,7 +42,7 @@ const loginUser = async (req, res) => {
             return res.json({ success: false, message: 'Incorrect password' })
         }
         const data = { user: { id: user._id } }
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' })
+        const token = jwt.sign(data, JWT_SECRET, { expiresIn: '1h' })
         return res.json({ success: true, message: 'User logged in successfully', token })
     } catch (error) {
         console.log(error.message)
@@ -50,4 +50,33 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { addUser, loginUser }
+const editUser = async (req, res) => {
+    try {
+        const id = req.user.id
+        const { username, first_name, last_name, telephone } = req.body
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        const usernameExists = await User.findOne({ username })
+        if (usernameExists && usernameExists._id !== id) {
+            return res.json({ success: false, message: 'Username already exists' })
+        }
+        const updatedUser = await User.updateOne({ _id: id }, {
+            username: username,
+            first_name: first_name,
+            last_name: last_name,
+            telephone: telephone,
+            modified_at: Date.now()
+        })
+        if (!updatedUser) {
+            return res.json({ success: false, message: 'Error updating user' })
+        }
+        return res.json({ success: true, message: 'User updated Successfully' })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+module.exports = { addUser, loginUser, editUser }
