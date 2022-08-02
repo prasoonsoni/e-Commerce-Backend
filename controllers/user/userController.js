@@ -2,6 +2,7 @@ require('dotenv').config()
 const User = require('../../models/user/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { ObjectId } = require('mongodb')
 const JWT_SECRET = process.env.JWT_SECRET
 
 const addUser = async (req, res) => {
@@ -107,4 +108,18 @@ const changePassword = async (req, res) => {
     }
 }
 
-module.exports = { addUser, loginUser, editUser, changePassword }
+const getUserById = async(req, res)=>{
+    try {
+        const id = new ObjectId(req.params.id)
+        const user = await User.findOne({ _id: id }).select('-password')
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        return res.json({ success: true, message: 'User found', user })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+module.exports = { addUser, loginUser, editUser, changePassword, getUserById}
