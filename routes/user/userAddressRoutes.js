@@ -4,5 +4,6 @@ const userAddressController = require('../../controllers/user/userAddressControl
 const fetchUser = require('../../middlewares/fetchUser')
 
 router.post('/add', fetchUser, userAddressController.addAddress)
+router.put('/edit/:id', fetchUser, userAddressController.editAddress)
 
 module.exports = router
