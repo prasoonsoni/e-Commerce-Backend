@@ -108,7 +108,7 @@ const changePassword = async (req, res) => {
     }
 }
 
-const getUserById = async(req, res)=>{
+const getUserById = async (req, res) => {
     try {
         const id = new ObjectId(req.params.id)
         const user = await User.findOne({ _id: id }).select('-password')
@@ -122,4 +122,17 @@ const getUserById = async(req, res)=>{
     }
 }
 
-module.exports = { addUser, loginUser, editUser, changePassword, getUserById}
+const getUser = async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.user.id }).select('-password')
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        return res.json({ success: true, message: 'User found', user })
+    }
+    catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+module.exports = { addUser, loginUser, editUser, changePassword, getUserById, getUser }
