@@ -33,7 +33,7 @@ const addAddress = async (req, res) => {
     }
 }
 
-const editAddress = async(req, res)=>{
+const editAddress = async (req, res) => {
     try {
         const id = req.user.id
         const address_id = new ObjectId(req.params.id)
@@ -46,7 +46,7 @@ const editAddress = async(req, res)=>{
         if (!address) {
             return res.json({ success: false, message: 'Address not found' })
         }
-        if(address.user_id.toString() !== user._id.toString()){
+        if (address.user_id.toString() !== user._id.toString()) {
             return res.json({ success: false, message: 'You are not authorized to edit this address' })
         }
         const updatedAddress = await UserAddress.updateOne({ _id: address_id }, {
@@ -70,7 +70,7 @@ const editAddress = async(req, res)=>{
     }
 }
 
-const deleteAddress = async(req, res)=>{
+const deleteAddress = async (req, res) => {
     try {
         const id = req.user.id
         const address_id = new ObjectId(req.params.id)
@@ -82,7 +82,7 @@ const deleteAddress = async(req, res)=>{
         if (!address) {
             return res.json({ success: false, message: 'Address not found' })
         }
-        if(address.user_id.toString() !== user._id.toString()){
+        if (address.user_id.toString() !== user._id.toString()) {
             return res.json({ success: false, message: 'You are not authorized to delete this address' })
         }
         const deletedAddress = await UserAddress.deleteOne({ _id: address_id })
@@ -95,4 +95,23 @@ const deleteAddress = async(req, res)=>{
         res.json({ success: false, message: "Some Internal Server Error Occured." })
     }
 }
-module.exports = { addAddress, editAddress, deleteAddress }
+
+const getAllAddress = async (req, res) => {
+    try {
+        const id = req.user.id
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        const addresses = await UserAddress.find({ user_id: user._id })
+        if (!addresses) {
+            return res.json({ success: false, message: 'No address found' })
+        }
+        return res.json({ success: true, message: 'Addresses found Successfully', addresses })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+module.exports = { addAddress, editAddress, deleteAddress, getAllAddress }
