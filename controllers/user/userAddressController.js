@@ -114,4 +114,27 @@ const getAllAddress = async (req, res) => {
     }
 }
 
-module.exports = { addAddress, editAddress, deleteAddress, getAllAddress }
+const getAddressById = async (req, res) => {
+    try {
+        const id = req.user.id
+        const address_id = new ObjectId(req.params.id)
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        const address = await UserAddress.findOne({ _id: address_id })
+        if (!address) {
+            return res.json({ success: false, message: 'Address not found' })
+        }
+        if (address.user_id.toString() !== user._id.toString()) {
+            return res.json({ success: false, message: 'You are not authorized to view this address' })
+        }
+        return res.json({ success: true, message: 'Address found Successfully', address })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+
+module.exports = { addAddress, editAddress, deleteAddress, getAllAddress, getAddressById }
