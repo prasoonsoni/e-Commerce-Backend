@@ -4,5 +4,6 @@ const userPaymentController = require('../../controllers/user/userPaymentControl
 const fetchUser = require('../../middlewares/fetchUser')
 
 router.post('/add', fetchUser, userPaymentController.addPaymentMethod)
+router.put('/edit/:id', fetchUser, userPaymentController.editPaymentMethod)
 
 module.exports = router
