@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', require('./routes/user/userRoutes'))
 app.use('/api/user/address', require('./routes/user/userAddressRoutes'))
+app.use('/api/user/payment', require('./routes/user/userPaymentRoutes'))
 
 app.listen(port, () => {
     console.log(`E-Commerce Backend listening on http://localhost:${port}`)
