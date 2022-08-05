@@ -7,5 +7,6 @@ router.post('/add', fetchUser, userPaymentController.addPaymentMethod)
 router.put('/edit/:id', fetchUser, userPaymentController.editPaymentMethod)
 router.delete('/delete/:id', fetchUser, userPaymentController.deletePaymentMethod)
 router.get('/all', fetchUser, userPaymentController.getAllPaymentMethods)
+router.get('/:id', fetchUser, userPaymentController.getPaymentMethodById)
 
 module.exports = router
