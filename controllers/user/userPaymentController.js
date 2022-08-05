@@ -77,4 +77,22 @@ const deletePaymentMethod = async (req, res) => {
     }
 }        
 
-module.exports = { addPaymentMethod, editPaymentMethod, deletePaymentMethod }
+const getAllPaymentMethods = async (req, res) => {
+    try {
+        const user_id = new ObjectId(req.user.id)
+        const user = await User.findOne({ _id: user_id })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' })
+        }
+        const userPayment = await UserPayment.find({ user_id })
+        if (!userPayment) { 
+            res.json({ success: false, message: 'No payment methods found' })
+        }
+        res.json({ success: true, message: 'Payment methods found', data: userPayment })
+    } catch (error) {
+        console.log(error.message)
+        res.json({ success: false, message: "Some Internal Server Error Occured." })
+    }
+}
+
+module.exports = { addPaymentMethod, editPaymentMethod, deletePaymentMethod, getAllPaymentMethods }
