@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {Schema} = mongoose
+const { Schema } = mongoose
 
 const CartItemSchema = new Schema({
     session_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'ShoppingSession' },
